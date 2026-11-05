@@ -49,6 +49,18 @@ The page break applies to PDF output and when printing the HTML. It is not shown
 
 When "Fit each figure on one page" is enabled for PDF output, you can also select "Keep heading with figure". It is off by default. When enabled, one heading immediately before an image or Mermaid diagram stays on the same page, and the figure is reduced to leave room for it. It does not apply when body text, a list, or an explicit page break separates the heading from the figure.
 
+### Front matter
+
+If a Markdown file begins with YAML front matter enclosed by `---` lines, its fields appear in a two-column table at the beginning of the document. Lists appear as bullet lists, nested mappings as tables, and multiline values retain their line breaks. Values are not executed as HTML.
+
+```yaml
+---
+title: "Frontmatter"
+retrieved_at: "2026-11-05T15:13:13.171000+09:00"---
+```
+
+The front matter `title` does not set the HTML `<title>`. The first level-one heading in the body sets the HTML title; if none exists, the input filename is used. Invalid YAML front matter causes that file's conversion to fail.
+
 ### CLI
 
 To convert without opening the GUI, pass `--run` and one or more `.md` or `.markdown` files. You can process multiple files together; quote paths that contain spaces.

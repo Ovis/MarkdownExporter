@@ -99,6 +99,10 @@
   <data name="CliErrorPrefix" xml:space="preserve"><value>エラー: {0}</value></data>
   <data name="InputMissing" xml:space="preserve"><value>入力ファイルがありません: {0}</value></data>
   <data name="InvalidMarkdown" xml:space="preserve"><value>Markdownファイルではありません: {0}</value></data>
+  <data name="FrontMatterInvalid" xml:space="preserve"><value>FrontmatterのYAMLを読み取れません: {0}</value></data>
+  <data name="FrontMatterMappingRequired" xml:space="preserve"><value>Frontmatterの最上位には項目名と値の組を指定してください。</value></data>
+  <data name="FrontMatterUnsupportedValue" xml:space="preserve"><value>Frontmatterに表示できない値が含まれています。</value></data>
+  <data name="FrontMatterTooDeep" xml:space="preserve"><value>Frontmatterの入れ子が深すぎます。</value></data>
   <data name="OutputExists" xml:space="preserve"><value>出力ファイルが既にあります: {0}</value></data>
   <data name="LinkFinalizeFailed" xml:space="preserve"><value>リンクの確定に失敗しました: {0}</value></data>
   <data name="LinkTargetFailed" xml:space="preserve"><value>リンク先の変換が失敗したため元のリンクを維持しました: {0}</value></data>

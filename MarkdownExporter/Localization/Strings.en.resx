@@ -99,6 +99,10 @@
   <data name="CliErrorPrefix" xml:space="preserve"><value>Error: {0}</value></data>
   <data name="InputMissing" xml:space="preserve"><value>Input file not found: {0}</value></data>
   <data name="InvalidMarkdown" xml:space="preserve"><value>Not a Markdown file: {0}</value></data>
+  <data name="FrontMatterInvalid" xml:space="preserve"><value>Could not read YAML front matter: {0}</value></data>
+  <data name="FrontMatterMappingRequired" xml:space="preserve"><value>Front matter must contain a top-level mapping of names to values.</value></data>
+  <data name="FrontMatterUnsupportedValue" xml:space="preserve"><value>Front matter contains a value that cannot be displayed.</value></data>
+  <data name="FrontMatterTooDeep" xml:space="preserve"><value>Front matter nesting is too deep.</value></data>
   <data name="OutputExists" xml:space="preserve"><value>Output file already exists: {0}</value></data>
   <data name="LinkFinalizeFailed" xml:space="preserve"><value>Could not finalize links: {0}</value></data>
   <data name="LinkTargetFailed" xml:space="preserve"><value>The linked Markdown could not be converted; kept the original link: {0}</value></data>
