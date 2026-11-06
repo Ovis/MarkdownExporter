@@ -45,7 +45,8 @@ public sealed class SettingsStoreTests
                 Format = ExportFormat.Pdf,
                 Template = "custom",
                 KeepHeadingWithFigure = true,
-                FollowMarkdownLinks = true
+                FollowMarkdownLinks = true,
+                Margins = new PdfMargins { Top = 5m, Bottom = 10m, Left = 15m, Right = 20m }
             }
         };
 
@@ -62,6 +63,8 @@ public sealed class SettingsStoreTests
             Assert.That(loaded.Defaults.Template, Is.EqualTo("changed"));
             Assert.That(loaded.Defaults.KeepHeadingWithFigure, Is.True);
             Assert.That(loaded.Defaults.FollowMarkdownLinks, Is.True);
+            Assert.That(loaded.Defaults.Margins, Is.EqualTo(new PdfMargins
+            { Top = 5m, Bottom = 10m, Left = 15m, Right = 20m }));
             Assert.That(File.Exists(path + ".tmp"), Is.False);
         });
     }
@@ -78,6 +81,41 @@ public sealed class SettingsStoreTests
             Assert.That(changes.HasChanges, Is.True);
             Assert.That(changes.KeepHeadingWithFigureChanged, Is.True);
             Assert.That(changes.Saved.KeepHeadingWithFigure, Is.True);
+        });
+    }
+
+    /// <summary>古い設定に余白がなくても各辺15mmを適用する。</summary>
+    [Test]
+    public void Load_OlderSettingsWithoutMargins_Uses15MmDefaults()
+    {
+        using var folder = new TestFolder();
+        var path = folder.Write("settings.json", "{\"Defaults\":{\"Format\":1}}");
+
+        Assert.That(SettingsStore.Load(path).Defaults.Margins, Is.EqualTo(new PdfMargins()));
+    }
+
+    /// <summary>保存された余白がnullの場合に既定値へ復元する。</summary>
+    [Test]
+    public void Load_NullMargins_RepairsSettings()
+    {
+        using var folder = new TestFolder();
+        var path = folder.Write("settings.json", "{\"Defaults\":{\"Margins\":null}}");
+
+        Assert.That(SettingsStore.Load(path).Defaults.Margins, Is.EqualTo(new PdfMargins()));
+    }
+
+    /// <summary>余白だけを変更した場合も今回の変換への反映確認に含める。</summary>
+    [Test]
+    public void ConversionDefaultsChanges_MarginsOnly_RequiresCurrentSettingsPrompt()
+    {
+        var changes = new ConversionDefaultsChanges(new ConversionOptions(),
+            new ConversionOptions { Margins = new PdfMargins { Top = 12m } });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(changes.HasChanges, Is.True);
+            Assert.That(changes.MarginsChanged, Is.True);
+            Assert.That(changes.Saved.Margins.Top, Is.EqualTo(12m));
         });
     }
 

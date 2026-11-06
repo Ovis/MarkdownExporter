@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using MarkdownExporter.Conversion;
 using MarkdownExporter.Dialogs;
 using MarkdownExporter.Localization;
@@ -43,6 +44,7 @@ public partial class DefaultsWindow : Window
         EmbedCheck.IsChecked = defaults.EmbedImages;
         PortraitRadio.IsChecked = defaults.Orientation == PageOrientation.Portrait;
         LandscapeRadio.IsChecked = defaults.Orientation == PageOrientation.Landscape;
+        MarginEditor.SetMargins(defaults.Margins);
         FitCheck.IsChecked = defaults.FitFiguresToPage;
         KeepHeadingCheck.IsChecked = defaults.KeepHeadingWithFigure;
         FollowMarkdownCheck.IsChecked = defaults.FollowMarkdownLinks;
@@ -50,6 +52,8 @@ public partial class DefaultsWindow : Window
     }
 
     private void Window_SourceInitialized(object sender, EventArgs e) => app.ThemeManager.ApplyTitleBar(this);
+    private void Window_Loaded(object sender, RoutedEventArgs e) =>
+        Dispatcher.BeginInvoke(DispatcherPriority.Loaded, SettingsScroll.ScrollToTop);
     private void ThemeChanged(object sender, SelectionChangedEventArgs e)
     {
         if (ready && ThemeCombo.SelectedIndex >= 0)
@@ -128,6 +132,17 @@ public partial class DefaultsWindow : Window
             AppDialog.ShowMessage(this, LanguageManager.Text("OutputDirectoryRequired"), LanguageManager.Text("DialogSettingsError"));
             return;
         }
+        var orientation = LandscapeRadio.IsChecked == true ? PageOrientation.Landscape : PageOrientation.Portrait;
+        PdfMargins margins;
+        try
+        {
+            margins = PdfCheck.IsChecked == true ? MarginEditor.ReadMargins(orientation) : app.Settings.Defaults.Margins;
+        }
+        catch (Exception ex)
+        {
+            AppDialog.ShowMessage(this, ex.Message, LanguageManager.Text("DialogSettingsError"));
+            return;
+        }
         var options = new ConversionOptions
         {
             Format = HtmlCheck.IsChecked == true && PdfCheck.IsChecked == true ? ExportFormat.Both
@@ -135,7 +150,8 @@ public partial class DefaultsWindow : Window
             OutputDirectory = SourceFolderRadio.IsChecked == true ? null : OutputText.Text.Trim(),
             Template = (TemplateCombo.SelectedItem as string ?? "").Trim(),
             EmbedImages = EmbedCheck.IsChecked == true,
-            Orientation = LandscapeRadio.IsChecked == true ? PageOrientation.Landscape : PageOrientation.Portrait,
+            Orientation = orientation,
+            Margins = margins,
             FitFiguresToPage = FitCheck.IsChecked == true,
             KeepHeadingWithFigure = KeepHeadingCheck.IsChecked == true,
             FollowMarkdownLinks = FollowMarkdownCheck.IsChecked == true

@@ -30,6 +30,14 @@
   <data name="HtmlImages" xml:space="preserve"><value>HTML画像</value></data>
   <data name="EmbedInHtml" xml:space="preserve"><value>HTMLに埋め込む</value></data>
   <data name="PdfOrientation" xml:space="preserve"><value>PDFの向き</value></data>
+  <data name="PdfMargins" xml:space="preserve"><value>PDFの余白（mm）</value></data>
+  <data name="PdfMarginTop" xml:space="preserve"><value>上</value></data>
+  <data name="PdfMarginBottom" xml:space="preserve"><value>下</value></data>
+  <data name="PdfMarginLeft" xml:space="preserve"><value>左</value></data>
+  <data name="PdfMarginRight" xml:space="preserve"><value>右</value></data>
+  <data name="PdfMarginsSummary" xml:space="preserve"><value>上 {0}・下 {1}・左 {2}・右 {3} mm</value></data>
+  <data name="InvalidPdfMargins" xml:space="preserve"><value>PDFの余白は0以上の数値で入力してください。</value></data>
+  <data name="PdfMarginsTooLarge" xml:space="preserve"><value>PDFの余白が大きすぎます。上下・左右の合計をA4用紙の寸法より小さくしてください。</value></data>
   <data name="Portrait" xml:space="preserve"><value>縦</value></data>
   <data name="Landscape" xml:space="preserve"><value>横</value></data>
   <data name="FigureDisplay" xml:space="preserve"><value>図の表示</value></data>
@@ -80,6 +88,7 @@
   <data name="CliMissingValue" xml:space="preserve"><value>{0} の値がありません。</value></data>
   <data name="CliInvalidFormat" xml:space="preserve"><value>--format は html、pdf、both のいずれかです。</value></data>
   <data name="CliInvalidOrientation" xml:space="preserve"><value>--orientation は portrait または landscape です。</value></data>
+  <data name="CliInvalidMargin" xml:space="preserve"><value>{0} には0以上の数値をmm単位で指定してください。</value></data>
   <data name="CliInvalidEncoding" xml:space="preserve"><value>--encoding は auto、utf-8、shift-jis、euc-jp のいずれかです。</value></data>
   <data name="CliUnknownOption" xml:space="preserve"><value>不明なオプション: {0}</value></data>
   <data name="CliRequiresFile" xml:space="preserve"><value>--run には Markdown ファイルを指定してください。</value></data>
@@ -89,6 +98,10 @@
   <data name="CliFormatDesc" xml:space="preserve"><value>出力形式（既定: both）</value></data>
   <data name="CliEmbedDesc" xml:space="preserve"><value>画像をHTMLへ埋め込む</value></data>
   <data name="CliOrientationDesc" xml:space="preserve"><value>PDFの向き</value></data>
+  <data name="CliMarginTopDesc" xml:space="preserve"><value>PDFの上余白（mm、既定: 15）</value></data>
+  <data name="CliMarginBottomDesc" xml:space="preserve"><value>PDFの下余白（mm、既定: 15）</value></data>
+  <data name="CliMarginLeftDesc" xml:space="preserve"><value>PDFの左余白（mm、既定: 15）</value></data>
+  <data name="CliMarginRightDesc" xml:space="preserve"><value>PDFの右余白（mm、既定: 15）</value></data>
   <data name="CliFitDesc" xml:space="preserve"><value>PDFの図をページへ縮小</value></data>
   <data name="CliKeepHeadingDesc" xml:space="preserve"><value>直前の見出しを図と同じPDFページへ配置（--fit-figures-to-page が必要）</value></data>
   <data name="CliKeepHeadingRequiresFit" xml:space="preserve"><value>--keep-heading-with-figure には --fit-figures-to-page も指定してください。</value></data>

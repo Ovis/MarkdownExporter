@@ -176,6 +176,7 @@ public partial class MainWindow : Window
             throw new InvalidOperationException(LanguageManager.Text("SelectHtmlOrPdf"));
         if (CustomFolderRadio.IsChecked == true && string.IsNullOrWhiteSpace(OutputText.Text))
             throw new InvalidOperationException(LanguageManager.Text("OutputDirectoryRequired"));
+        var orientation = LandscapeRadio.IsChecked == true ? PageOrientation.Landscape : PageOrientation.Portrait;
         return new ConversionOptions
         {
             Format = HtmlCheck.IsChecked == true && PdfCheck.IsChecked == true ? ExportFormat.Both
@@ -183,7 +184,8 @@ public partial class MainWindow : Window
             OutputDirectory = SourceFolderRadio.IsChecked == true ? null : OutputText.Text.Trim(),
             Template = (TemplateCombo.SelectedItem as string ?? "").Trim(),
             EmbedImages = EmbedCheck.IsChecked == true,
-            Orientation = LandscapeRadio.IsChecked == true ? PageOrientation.Landscape : PageOrientation.Portrait,
+            Orientation = orientation,
+            Margins = PdfCheck.IsChecked == true ? MarginEditor.ReadMargins(orientation) : app.Settings.Defaults.Margins,
             FitFiguresToPage = FitCheck.IsChecked == true,
             KeepHeadingWithFigure = KeepHeadingCheck.IsChecked == true,
             FollowMarkdownLinks = FollowMarkdownCheck.IsChecked == true
@@ -200,6 +202,7 @@ public partial class MainWindow : Window
         EmbedCheck.IsChecked = options.EmbedImages;
         PortraitRadio.IsChecked = options.Orientation == PageOrientation.Portrait;
         LandscapeRadio.IsChecked = options.Orientation == PageOrientation.Landscape;
+        MarginEditor.SetMargins(options.Margins);
         FitCheck.IsChecked = options.FitFiguresToPage;
         KeepHeadingCheck.IsChecked = options.KeepHeadingWithFigure;
         FollowMarkdownCheck.IsChecked = options.FollowMarkdownLinks;
@@ -248,6 +251,8 @@ public partial class MainWindow : Window
             PortraitRadio.IsChecked = saved.Orientation == PageOrientation.Portrait;
             LandscapeRadio.IsChecked = saved.Orientation == PageOrientation.Landscape;
         }
+        if (changes.MarginsChanged)
+            MarginEditor.SetMargins(saved.Margins);
         if (changes.FitFiguresToPageChanged)
             FitCheck.IsChecked = saved.FitFiguresToPage;
         if (changes.KeepHeadingWithFigureChanged)

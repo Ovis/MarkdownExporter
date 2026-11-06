@@ -13,6 +13,7 @@ public sealed class CommandLineParserTests
         var command = CommandLineParser.Parse([
             "--run", "first.md", "second.markdown", "-o", "output", "--template", "custom",
             "--format", "pdf", "--encoding", "euc-jp", "--orientation", "landscape",
+            "--margin-top", "5", "--margin-bottom", "20", "--margin-left", "10.5", "--margin-right", "25",
             "--embed-images", "--fit-figures-to-page", "--keep-heading-with-figure",
             "--follow-markdown-links", "--overwrite"
         ]);
@@ -26,6 +27,8 @@ public sealed class CommandLineParserTests
             Assert.That(command.Options.Format, Is.EqualTo(ExportFormat.Pdf));
             Assert.That(command.Options.Encoding, Is.EqualTo(InputEncoding.EucJp));
             Assert.That(command.Options.Orientation, Is.EqualTo(PageOrientation.Landscape));
+            Assert.That(command.Options.Margins, Is.EqualTo(new PdfMargins
+            { Top = 5m, Bottom = 20m, Left = 10.5m, Right = 25m }));
             Assert.That(command.Options.EmbedImages, Is.True);
             Assert.That(command.Options.FitFiguresToPage, Is.True);
             Assert.That(command.Options.KeepHeadingWithFigure, Is.True);
@@ -54,6 +57,7 @@ public sealed class CommandLineParserTests
             Assert.That(command.Options.Format, Is.EqualTo(ExportFormat.Both));
             Assert.That(command.Options.Encoding, Is.EqualTo(InputEncoding.Auto));
             Assert.That(command.Options.FollowMarkdownLinks, Is.False);
+            Assert.That(command.Options.Margins, Is.EqualTo(new PdfMargins()));
         });
     }
 
@@ -100,6 +104,10 @@ public sealed class CommandLineParserTests
     [TestCase("--run a.md --format other")]
     [TestCase("--run a.md --encoding")]
     [TestCase("--run a.md --unknown")]
+    [TestCase("--run a.md --margin-top -1")]
+    [TestCase("--run a.md --margin-left 2,5")]
+    [TestCase("--run a.md --margin-bottom 999")]
+    [TestCase("--run a.md --margin-right")]
     [TestCase("--format pdf a.md")]
     public void Parse_InvalidArguments_Throws(string arguments)
     {

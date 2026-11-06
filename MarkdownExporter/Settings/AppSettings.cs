@@ -25,6 +25,7 @@ public static class SettingsStore
         {
             var settings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(path)) ?? new();
             settings.Defaults ??= new ConversionOptions();
+            settings.Defaults.Margins ??= new PdfMargins();
             return settings;
         }
         catch (FileNotFoundException) { return new(); }

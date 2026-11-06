@@ -82,6 +82,7 @@ mdexport.exe --run <input.md> [another.markdown ...] [options]
 | `--format <format>` | Choose `html`, `pdf`, or `both`; default: `both`. `html` and `pdf` produce only the named format. |
 | `--embed-images` | Embed local images as Data URIs in HTML. By default, they are copied to the HTML asset folder. |
 | `--orientation <orientation>` | Choose `portrait` (A4 portrait) or `landscape` (A4 landscape); default: `portrait`. |
+| `--margin-top <mm>` / `--margin-bottom <mm>` / `--margin-left <mm>` / `--margin-right <mm>` | Set PDF top, bottom, left, and right margins separately in millimeters. Each defaults to `15`; values must be non-negative. |
 | `--fit-figures-to-page` | Scale images and Mermaid diagrams down to the PDF printable area; off by default. |
 | `--keep-heading-with-figure` | Keep the one heading immediately before a figure on the same PDF page. Requires `--fit-figures-to-page`; off by default. |
 | `--follow-markdown-links` | Recursively convert locally linked Markdown files; off by default. |
@@ -95,6 +96,7 @@ Examples from the distribution folder in PowerShell:
 .\mdexport.exe --run .\report.md
 .\mdexport.exe --run .\chapter1.md ".\draft chapter.md" --format html -o "C:\Output Files" --template custom
 .\mdexport.exe --run .\report.md --format pdf --orientation landscape --fit-figures-to-page
+.\mdexport.exe --run .\report.md --format pdf --margin-top 10 --margin-bottom 20 --margin-left 15 --margin-right 15
 .\mdexport.exe --run .\legacy.md --encoding shift-jis --embed-images --overwrite
 .\mdexport.exe --run .\index.md --format both --follow-markdown-links --output .\out
 .\mdexport.exe --help
