@@ -22,6 +22,7 @@ public partial class DefaultsWindow : Window
 
     internal ConversionDefaultsChanges? SavedConversionChanges { get; private set; }
 
+    /// <summary>保存済みの既定設定を編集画面へ読み込む。</summary>
     public DefaultsWindow()
     {
         InitializeComponent();
@@ -43,6 +44,7 @@ public partial class DefaultsWindow : Window
         PortraitRadio.IsChecked = defaults.Orientation == PageOrientation.Portrait;
         LandscapeRadio.IsChecked = defaults.Orientation == PageOrientation.Landscape;
         FitCheck.IsChecked = defaults.FitFiguresToPage;
+        KeepHeadingCheck.IsChecked = defaults.KeepHeadingWithFigure;
         FollowMarkdownCheck.IsChecked = defaults.FollowMarkdownLinks;
         ready = true;
     }
@@ -113,6 +115,7 @@ public partial class DefaultsWindow : Window
         }
         base.OnClosing(e);
     }
+    /// <summary>既定の変換設定を検証して保存し、今回の変換へ反映するための変更内容を残す。</summary>
     private void Save_Click(object sender, RoutedEventArgs e)
     {
         if (HtmlCheck.IsChecked != true && PdfCheck.IsChecked != true)
@@ -134,6 +137,7 @@ public partial class DefaultsWindow : Window
             EmbedImages = EmbedCheck.IsChecked == true,
             Orientation = LandscapeRadio.IsChecked == true ? PageOrientation.Landscape : PageOrientation.Portrait,
             FitFiguresToPage = FitCheck.IsChecked == true,
+            KeepHeadingWithFigure = KeepHeadingCheck.IsChecked == true,
             FollowMarkdownLinks = FollowMarkdownCheck.IsChecked == true
         };
         try

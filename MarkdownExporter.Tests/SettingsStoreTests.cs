@@ -5,6 +5,7 @@ using MarkdownExporter.Themes;
 
 namespace MarkdownExporter.Tests;
 
+/// <summary>既定の変換設定の保存と変更検出を確認する。</summary>
 [TestFixture]
 public sealed class SettingsStoreTests
 {
@@ -29,6 +30,7 @@ public sealed class SettingsStoreTests
         Assert.That(SettingsStore.Load(path).Defaults, Is.Not.Null);
     }
 
+    /// <summary>図と見出しの配置設定を含む既定値を保存して読み戻す。</summary>
     [Test]
     public void Save_ThenLoad_RoundTripsAndReplacesExistingFile()
     {
@@ -38,7 +40,13 @@ public sealed class SettingsStoreTests
         {
             Theme = AppThemePreference.Dark,
             Language = LanguagePreference.English,
-            Defaults = new ConversionOptions { Format = ExportFormat.Pdf, Template = "custom", FollowMarkdownLinks = true }
+            Defaults = new ConversionOptions
+            {
+                Format = ExportFormat.Pdf,
+                Template = "custom",
+                KeepHeadingWithFigure = true,
+                FollowMarkdownLinks = true
+            }
         };
 
         SettingsStore.Save(settings, path);
@@ -52,8 +60,24 @@ public sealed class SettingsStoreTests
             Assert.That(loaded.Language, Is.EqualTo(LanguagePreference.English));
             Assert.That(loaded.Defaults.Format, Is.EqualTo(ExportFormat.Pdf));
             Assert.That(loaded.Defaults.Template, Is.EqualTo("changed"));
+            Assert.That(loaded.Defaults.KeepHeadingWithFigure, Is.True);
             Assert.That(loaded.Defaults.FollowMarkdownLinks, Is.True);
             Assert.That(File.Exists(path + ".tmp"), Is.False);
+        });
+    }
+
+    /// <summary>既定の見出し配置だけを変えても今回の変換へ反映する確認対象に含める。</summary>
+    [Test]
+    public void ConversionDefaultsChanges_KeepHeadingOnly_RequiresCurrentSettingsPrompt()
+    {
+        var changes = new ConversionDefaultsChanges(new ConversionOptions(),
+            new ConversionOptions { KeepHeadingWithFigure = true });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(changes.HasChanges, Is.True);
+            Assert.That(changes.KeepHeadingWithFigureChanged, Is.True);
+            Assert.That(changes.Saved.KeepHeadingWithFigure, Is.True);
         });
     }
 

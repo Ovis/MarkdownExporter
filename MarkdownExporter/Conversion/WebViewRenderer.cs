@@ -8,6 +8,7 @@ namespace MarkdownExporter.Conversion;
 
 public sealed record RenderOutput(string Html, IReadOnlyList<string> Warnings);
 
+/// <summary>WebView2でHTMLを確定し、必要に応じてPDFを印刷する。</summary>
 public sealed class WebViewRenderer : IDisposable
 {
     private readonly WebView2 browser = new();
@@ -33,7 +34,8 @@ public sealed class WebViewRenderer : IDisposable
         window.Show();
     }
 
-    public async Task<RenderOutput> RenderAsync(string stageHtml, string? pdfPath, PageOrientation orientation, bool fitFigures)
+    /// <summary>描画済みHTMLを取得し、PDF指定時は印刷用の調整を加えて出力する。</summary>
+    public async Task<RenderOutput> RenderAsync(string stageHtml, string? pdfPath, ConversionOptions options)
     {
         if (!initialized)
         {
@@ -87,9 +89,9 @@ public sealed class WebViewRenderer : IDisposable
 
         if (pdfPath is not null)
         {
-            var landscape = orientation == PageOrientation.Landscape;
+            var landscape = options.Orientation == PageOrientation.Landscape;
             var pageCss = landscape ? "@page{size:A4 landscape;margin:15mm}" : "@page{size:A4 portrait;margin:15mm}";
-            if (fitFigures)
+            if (options.FitFiguresToPage)
             {
                 var maxWidth = landscape ? "267mm" : "180mm";
                 var maxHeight = landscape ? "150mm" : "267mm";
@@ -107,6 +109,46 @@ public sealed class WebViewRenderer : IDisposable
                       style.setProperty('break-inside', 'avoid-page', 'important');
                     });
                     """);
+
+                if (options.KeepHeadingWithFigure)
+                    await browser.CoreWebView2.ExecuteScriptAsync($$"""
+                        (() => {
+                          const parseLength = value => Number.parseFloat(value) || 0;
+                          for (const figure of document.querySelectorAll('img,#diagram svg')) {
+                            const block = figure.closest('#diagram') || figure.closest('p');
+                            if (!block || !block.parentElement || block.closest('.mdexport-figure-heading')) {
+                              continue;
+                            }
+                            if (figure.tagName === 'IMG' &&
+                                (block.querySelectorAll('img').length !== 1 || block.textContent.trim())) {
+                              continue;
+                            }
+
+                            const heading = block.previousElementSibling;
+                            if (!heading || !/^H[1-6]$/.test(heading.tagName)) {
+                              continue;
+                            }
+
+                            const wrapper = document.createElement('div');
+                            wrapper.className = 'mdexport-figure-heading';
+                            // Chromiumの印刷時に見出しと図を分割させない。
+                            wrapper.style.display = 'inline-block';
+                            wrapper.style.width = '100%';
+                            wrapper.style.setProperty('break-inside', 'avoid-page', 'important');
+                            block.parentElement.insertBefore(wrapper, heading);
+                            wrapper.append(heading, block);
+
+                            const headingStyle = getComputedStyle(heading);
+                            const blockStyle = getComputedStyle(block);
+                            // 見出し・余白・印刷時の端数分を図の上限から差し引く。
+                            const reserved = heading.getBoundingClientRect().height +
+                              parseLength(headingStyle.marginTop) + parseLength(headingStyle.marginBottom) +
+                              parseLength(blockStyle.marginTop) + parseLength(blockStyle.marginBottom) + 16;
+                            figure.style.setProperty('max-height',
+                              `max(1mm, calc({{maxHeight}} - ${reserved}px))`, 'important');
+                          }
+                        })();
+                        """);
             }
             await browser.CoreWebView2.ExecuteScriptAsync($"document.head.appendChild(Object.assign(document.createElement('style'), {{textContent: {JsonSerializer.Serialize(pageCss)}}}));");
             var settings = browser.CoreWebView2.Environment.CreatePrintSettings();

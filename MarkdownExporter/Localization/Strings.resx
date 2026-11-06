@@ -34,6 +34,7 @@
   <data name="Landscape" xml:space="preserve"><value>横</value></data>
   <data name="FigureDisplay" xml:space="preserve"><value>図の表示</value></data>
   <data name="FitOnePage" xml:space="preserve"><value>1ページに収める</value></data>
+  <data name="KeepHeadingWithFigure" xml:space="preserve"><value>見出しも図と同じページに出力</value></data>
   <data name="FollowMarkdownLinks" xml:space="preserve"><value>リンク先のMarkdownも変換</value></data>
   <data name="LinkedMarkdownRow" xml:space="preserve"><value>Markdownリンクから追加（文字コード: 自動）</value></data>
   <data name="RestoreDefaults" xml:space="preserve"><value>既定値に戻す</value></data>
@@ -89,6 +90,8 @@
   <data name="CliEmbedDesc" xml:space="preserve"><value>画像をHTMLへ埋め込む</value></data>
   <data name="CliOrientationDesc" xml:space="preserve"><value>PDFの向き</value></data>
   <data name="CliFitDesc" xml:space="preserve"><value>PDFの図をページへ縮小</value></data>
+  <data name="CliKeepHeadingDesc" xml:space="preserve"><value>直前の見出しを図と同じPDFページへ配置（--fit-figures-to-page が必要）</value></data>
+  <data name="CliKeepHeadingRequiresFit" xml:space="preserve"><value>--keep-heading-with-figure には --fit-figures-to-page も指定してください。</value></data>
   <data name="CliFollowMarkdownDesc" xml:space="preserve"><value>リンク先のMarkdownも再帰的に変換</value></data>
   <data name="CliEncodingDesc" xml:space="preserve"><value>入力文字コード（既定: auto）</value></data>
   <data name="CliOverwriteDesc" xml:space="preserve"><value>既存の出力を上書き</value></data>
