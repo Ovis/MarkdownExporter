@@ -2,8 +2,10 @@ using MarkdownExporter.Conversion;
 
 namespace MarkdownExporter.Settings;
 
+/// <summary>保存前後の既定設定を比較し、今回の変換へ反映する項目を示す。</summary>
 internal sealed class ConversionDefaultsChanges
 {
+    /// <summary>保存前後の値を比較して各項目の変更有無を記録する。</summary>
     public ConversionDefaultsChanges(ConversionOptions previous, ConversionOptions saved)
     {
         Saved = saved.Copy();
@@ -14,6 +16,7 @@ internal sealed class ConversionDefaultsChanges
         EmbedImagesChanged = previous.EmbedImages != saved.EmbedImages;
         OrientationChanged = previous.Orientation != saved.Orientation;
         FitFiguresToPageChanged = previous.FitFiguresToPage != saved.FitFiguresToPage;
+        KeepHeadingWithFigureChanged = previous.KeepHeadingWithFigure != saved.KeepHeadingWithFigure;
         FollowMarkdownLinksChanged = previous.FollowMarkdownLinks != saved.FollowMarkdownLinks;
     }
 
@@ -24,9 +27,11 @@ internal sealed class ConversionDefaultsChanges
     public bool EmbedImagesChanged { get; }
     public bool OrientationChanged { get; }
     public bool FitFiguresToPageChanged { get; }
+    /// <summary>図と見出しの配置設定が保存時に変わったかを示す。</summary>
+    public bool KeepHeadingWithFigureChanged { get; }
     public bool FollowMarkdownLinksChanged { get; }
     public bool HasChanges => FormatChanged || OutputDirectoryChanged || TemplateChanged || EmbedImagesChanged
-        || OrientationChanged || FitFiguresToPageChanged || FollowMarkdownLinksChanged;
+        || OrientationChanged || FitFiguresToPageChanged || KeepHeadingWithFigureChanged || FollowMarkdownLinksChanged;
 
     private static string? NormalizeOutputDirectory(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();

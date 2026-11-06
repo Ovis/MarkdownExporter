@@ -51,6 +51,7 @@ public sealed class ConversionService
 
     public static bool IsMarkdown(string path) => Path.GetExtension(path).ToLowerInvariant() is ".md" or ".markdown";
 
+    /// <summary>入力文書を描画し、指定されたHTMLとPDFを出力する。</summary>
     public async Task<IReadOnlyList<ConversionResult>> ConvertAsync(IReadOnlyList<InputFile> inputs,
         ConversionOptions options, Action<ConversionResult>? onResult = null,
         Action<string, string>? onProgress = null)
@@ -93,7 +94,7 @@ public sealed class ConversionService
                     entry.Assets = new AssetWriter(outputDir, stem);
                     var html = builder.Build(path, markdown, outputDir, stem, options, template, entry.Assets, htmlTargets);
                     File.WriteAllText(entry.StagePath, html, new UTF8Encoding(false));
-                    var rendered = await renderer.RenderAsync(entry.StagePath, null, options.Orientation, options.FitFiguresToPage);
+                    var rendered = await renderer.RenderAsync(entry.StagePath, null, options);
                     entry.Warnings.AddRange(rendered.Warnings);
                     if (htmlWanted)
                     {
@@ -122,7 +123,7 @@ public sealed class ConversionService
                         var pdfHtml = MarkdownLinkRewriter.Rewrite(File.ReadAllText(entry.StagePath), entry.Path,
                             ready, entry.Warnings, !htmlWanted, pdfTargets, entry.OutputDirectory);
                         WriteAtomically(entry.StagePath, pdfHtml);
-                        var rendered = await renderer.RenderAsync(entry.StagePath, temporaryPdf, options.Orientation, options.FitFiguresToPage);
+                        var rendered = await renderer.RenderAsync(entry.StagePath, temporaryPdf, options);
                         foreach (var warning in rendered.Warnings.Except(entry.Warnings))
                             entry.Warnings.Add(warning);
                         entry.PdfSuccess = true;

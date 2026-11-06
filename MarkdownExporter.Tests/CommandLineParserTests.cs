@@ -2,16 +2,19 @@ using MarkdownExporter.Conversion;
 
 namespace MarkdownExporter.Tests;
 
+/// <summary>CLI引数から変換設定とGUI起動用のファイル一覧を構成できることを確認する。</summary>
 [TestFixture]
 public sealed class CommandLineParserTests
 {
+    /// <summary>PDF図と見出しの設定を含むCLIオプションを適用する。</summary>
     [Test]
     public void Parse_RunOptions_AppliesEachOption()
     {
         var command = CommandLineParser.Parse([
             "--run", "first.md", "second.markdown", "-o", "output", "--template", "custom",
             "--format", "pdf", "--encoding", "euc-jp", "--orientation", "landscape",
-            "--embed-images", "--fit-figures-to-page", "--follow-markdown-links", "--overwrite"
+            "--embed-images", "--fit-figures-to-page", "--keep-heading-with-figure",
+            "--follow-markdown-links", "--overwrite"
         ]);
 
         Assert.Multiple(() =>
@@ -25,9 +28,18 @@ public sealed class CommandLineParserTests
             Assert.That(command.Options.Orientation, Is.EqualTo(PageOrientation.Landscape));
             Assert.That(command.Options.EmbedImages, Is.True);
             Assert.That(command.Options.FitFiguresToPage, Is.True);
+            Assert.That(command.Options.KeepHeadingWithFigure, Is.True);
             Assert.That(command.Options.FollowMarkdownLinks, Is.True);
             Assert.That(command.Options.Overwrite, Is.True);
         });
+    }
+
+    /// <summary>図の縮小なしで見出しだけをまとめる指定をCLIで拒否する。</summary>
+    [Test]
+    public void Parse_KeepHeadingWithoutFit_ReportsMissingOption()
+    {
+        Assert.That(() => CommandLineParser.Parse(["--run", "report.md", "--keep-heading-with-figure"]),
+            Throws.ArgumentException.With.Message.Contains("--fit-figures-to-page"));
     }
 
     [Test]

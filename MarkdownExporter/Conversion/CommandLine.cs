@@ -4,8 +4,10 @@ namespace MarkdownExporter.Conversion;
 
 public sealed record CommandLine(bool Run, bool Help, IReadOnlyList<string> Files, ConversionOptions Options);
 
+/// <summary>CLI引数を変換設定と入力ファイルに解釈する。</summary>
 public static class CommandLineParser
 {
+    /// <summary>GUI起動と直接変換の引数を解析し、依存するオプションの組み合わせを検証する。</summary>
     public static CommandLine Parse(string[] args)
     {
         var files = new List<string>();
@@ -42,6 +44,9 @@ public static class CommandLineParser
                     break;
                 case "--fit-figures-to-page":
                     options.FitFiguresToPage = true;
+                    break;
+                case "--keep-heading-with-figure":
+                    options.KeepHeadingWithFigure = true;
                     break;
                 case "--follow-markdown-links":
                     options.FollowMarkdownLinks = true;
@@ -85,6 +90,8 @@ public static class CommandLineParser
         }
         if (run && files.Count == 0 && !help)
             throw new ArgumentException(LanguageManager.Text("CliRequiresFile"));
+        if (run && options.KeepHeadingWithFigure && !options.FitFiguresToPage && !help)
+            throw new ArgumentException(LanguageManager.Text("CliKeepHeadingRequiresFit"));
         if (!run && args.Any(x => x.StartsWith('-')) && !help)
             throw new ArgumentException(LanguageManager.Text("CliRequiresRun"));
         if (!run)
@@ -100,6 +107,7 @@ public static class CommandLineParser
           --embed-images               {LanguageManager.Text("CliEmbedDesc")}
           --orientation portrait|landscape  {LanguageManager.Text("CliOrientationDesc")}
           --fit-figures-to-page        {LanguageManager.Text("CliFitDesc")}
+          --keep-heading-with-figure  {LanguageManager.Text("CliKeepHeadingDesc")}
           --follow-markdown-links      {LanguageManager.Text("CliFollowMarkdownDesc")}
           --encoding auto|utf-8|shift-jis|euc-jp  {LanguageManager.Text("CliEncodingDesc")}
           --overwrite                  {LanguageManager.Text("CliOverwriteDesc")}

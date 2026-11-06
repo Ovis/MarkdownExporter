@@ -169,6 +169,7 @@ public partial class MainWindow : Window
         TemplateCombo.SelectedItem = value;
     }
 
+    /// <summary>変換設定欄の現在値を検証して変換オプションにまとめる。</summary>
     private ConversionOptions ReadOptions()
     {
         if (HtmlCheck.IsChecked != true && PdfCheck.IsChecked != true)
@@ -184,10 +185,12 @@ public partial class MainWindow : Window
             EmbedImages = EmbedCheck.IsChecked == true,
             Orientation = LandscapeRadio.IsChecked == true ? PageOrientation.Landscape : PageOrientation.Portrait,
             FitFiguresToPage = FitCheck.IsChecked == true,
+            KeepHeadingWithFigure = KeepHeadingCheck.IsChecked == true,
             FollowMarkdownLinks = FollowMarkdownCheck.IsChecked == true
         };
     }
 
+    /// <summary>保存済みの変換設定を画面の各項目に反映する。</summary>
     private void ApplyOptions(ConversionOptions options)
     {
         HtmlCheck.IsChecked = options.Format != ExportFormat.Pdf;
@@ -198,6 +201,7 @@ public partial class MainWindow : Window
         PortraitRadio.IsChecked = options.Orientation == PageOrientation.Portrait;
         LandscapeRadio.IsChecked = options.Orientation == PageOrientation.Landscape;
         FitCheck.IsChecked = options.FitFiguresToPage;
+        KeepHeadingCheck.IsChecked = options.KeepHeadingWithFigure;
         FollowMarkdownCheck.IsChecked = options.FollowMarkdownLinks;
     }
 
@@ -224,6 +228,7 @@ public partial class MainWindow : Window
         }
     }
 
+    /// <summary>利用者が反映を選んだ既定設定の変更項目だけを現在の変換設定へ適用する。</summary>
     private void ApplyChangedDefaults(ConversionDefaultsChanges changes)
     {
         var saved = changes.Saved;
@@ -245,6 +250,8 @@ public partial class MainWindow : Window
         }
         if (changes.FitFiguresToPageChanged)
             FitCheck.IsChecked = saved.FitFiguresToPage;
+        if (changes.KeepHeadingWithFigureChanged)
+            KeepHeadingCheck.IsChecked = saved.KeepHeadingWithFigure;
         if (changes.FollowMarkdownLinksChanged)
             FollowMarkdownCheck.IsChecked = saved.FollowMarkdownLinks;
     }

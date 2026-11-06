@@ -34,6 +34,7 @@
   <data name="Landscape" xml:space="preserve"><value>Landscape</value></data>
   <data name="FigureDisplay" xml:space="preserve"><value>Figures</value></data>
   <data name="FitOnePage" xml:space="preserve"><value>Fit each figure on one page</value></data>
+  <data name="KeepHeadingWithFigure" xml:space="preserve"><value>Keep heading with figure</value></data>
   <data name="FollowMarkdownLinks" xml:space="preserve"><value>Convert linked Markdown files</value></data>
   <data name="LinkedMarkdownRow" xml:space="preserve"><value>Added from a Markdown link (encoding: Auto)</value></data>
   <data name="RestoreDefaults" xml:space="preserve"><value>Restore defaults</value></data>
@@ -89,6 +90,8 @@
   <data name="CliEmbedDesc" xml:space="preserve"><value>Embed images in HTML</value></data>
   <data name="CliOrientationDesc" xml:space="preserve"><value>PDF orientation</value></data>
   <data name="CliFitDesc" xml:space="preserve"><value>Scale PDF figures to fit a page</value></data>
+  <data name="CliKeepHeadingDesc" xml:space="preserve"><value>Keep the preceding heading with its PDF figure (requires --fit-figures-to-page)</value></data>
+  <data name="CliKeepHeadingRequiresFit" xml:space="preserve"><value>--keep-heading-with-figure requires --fit-figures-to-page.</value></data>
   <data name="CliFollowMarkdownDesc" xml:space="preserve"><value>Recursively convert linked Markdown files</value></data>
   <data name="CliEncodingDesc" xml:space="preserve"><value>Input encoding (default: auto)</value></data>
   <data name="CliOverwriteDesc" xml:space="preserve"><value>Overwrite existing output</value></data>

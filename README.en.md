@@ -45,6 +45,10 @@ Text on the next page
 
 The page break applies to PDF output and when printing the HTML. It is not shown when viewing the HTML on screen.
 
+### Figures and preceding headings
+
+When "Fit each figure on one page" is enabled for PDF output, you can also select "Keep heading with figure". It is off by default. When enabled, one heading immediately before an image or Mermaid diagram stays on the same page, and the figure is reduced to leave room for it. It does not apply when body text, a list, or an explicit page break separates the heading from the figure.
+
 ### CLI
 
 To convert without opening the GUI, pass `--run` and one or more `.md` or `.markdown` files. You can process multiple files together; quote paths that contain spaces.
@@ -66,6 +70,7 @@ mdexport.exe --run <input.md> [another.markdown ...] [options]
 | `--embed-images` | Embed local images as Data URIs in HTML. By default, they are copied to the HTML asset folder. |
 | `--orientation <orientation>` | Choose `portrait` (A4 portrait) or `landscape` (A4 landscape); default: `portrait`. |
 | `--fit-figures-to-page` | Scale images and Mermaid diagrams down to the PDF printable area; off by default. |
+| `--keep-heading-with-figure` | Keep the one heading immediately before a figure on the same PDF page. Requires `--fit-figures-to-page`; off by default. |
 | `--follow-markdown-links` | Recursively convert locally linked Markdown files; off by default. |
 | `--encoding <encoding>` | Choose `auto`, `utf-8`, `shift-jis`, or `euc-jp`; default: `auto`. UTF-8 is tried first, then Shift JIS/EUC-JP detection. Detection failure is an error. The choice applies to all inputs. |
 | `--overwrite` | Replace existing HTML/PDF outputs; off by default. |
