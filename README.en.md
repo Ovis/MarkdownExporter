@@ -56,7 +56,8 @@ If a Markdown file begins with YAML front matter enclosed by `---` lines, its fi
 ```yaml
 ---
 title: "Frontmatter"
-retrieved_at: "2026-11-05T15:13:13.171000+09:00"---
+retrieved_at: "2026-11-05T15:13:13.171000+09:00"
+---
 ```
 
 The front matter `title` does not set the HTML `<title>`. The first level-one heading in the body sets the HTML title; if none exists, the input filename is used. Invalid YAML front matter causes that file's conversion to fail.
