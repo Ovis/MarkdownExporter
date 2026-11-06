@@ -11,5 +11,6 @@ This directory is included with the published application, ZIP, and installer.
 - `NuGet/`: license texts for application NuGet dependencies whose text is supplied by the package or differs from MIT, plus the common MIT terms and copyright notices.
 
 The Markdown.ColorCode and WebView2 license files were copied from their resolved NuGet packages. The Markdig, UTF.Unknown, and AngleSharp.Css texts were taken from the upstream commits recorded in their package metadata: [Markdig 1.4.0](https://github.com/xoofx/markdig/blob/56e9c238584a44a169f174c881855c049768634c/license.txt), [UTF.Unknown 2.7.0](https://github.com/CharsetDetector/UTF-unknown/blob/fd4c6fab634ef3783f8b5cb88e9ae9b2cc295ad5/license/MPL-1.1.txt), and [AngleSharp.Css 1.0.2](https://github.com/AngleSharp/AngleSharp.Css/blob/d158478f58882dad1d595dc7bb2286f3da4bf6ea/LICENSE).
+The YamlDotNet text was copied from the [v18.1.0 upstream license](https://github.com/aaubry/YamlDotNet/blob/v18.1.0/LICENSE.txt).
 
 The root `LICENSE` is the license for MarkdownExporter itself. It remains at the repository root for GitHub and is copied as `Licence/MarkdownExporter-LICENSE.txt` when the application is published. Refresh the inventory and notices when NuGet or bundled web asset versions change.

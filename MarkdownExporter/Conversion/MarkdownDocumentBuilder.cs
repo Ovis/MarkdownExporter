@@ -4,17 +4,30 @@ using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using Ganss.Xss;
 using Markdig;
+using Markdig.Extensions.Yaml;
 using Markdown.ColorCode;
 using MarkdownExporter.Localization;
 
 namespace MarkdownExporter.Conversion;
 
+/// <summary>Markdown本文をテンプレートへ組み込み、参照する素材とリンクを出力先に合わせる。</summary>
 public sealed class MarkdownDocumentBuilder
 {
+    private const string FrontMatterCss = """
+        .frontmatter{border-collapse:collapse;max-width:100%;margin:0 0 1.5em}
+        .frontmatter .frontmatter{margin:0}
+        .frontmatter th,.frontmatter td{border:1px solid #cdd7e4;padding:.35em .7em;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+        .frontmatter th{font-weight:600;white-space:nowrap;background:white}
+        .frontmatter td{white-space:pre-wrap}
+        .frontmatter tr:nth-child(even)>th,.frontmatter tr:nth-child(even)>td{background:#f2f5f9}
+        .frontmatter-list{margin:0;padding-left:1.5em}
+        @media print{.frontmatter{break-inside:auto}.frontmatter tr{break-inside:avoid-page}}
+        """;
     private static readonly MarkdownPipeline Pipeline = new MarkdownPipelineBuilder()
-        .UseAdvancedExtensions().UseColorCode(HtmlFormatterType.Css).Build();
+        .UseAdvancedExtensions().UseYamlFrontMatter().UseColorCode(HtmlFormatterType.Css).Build();
     private static readonly Regex CssUrl = new(@"url\(\s*(?<quote>['""']?)(?<url>[^)'""']+)\k<quote>\s*\)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+    /// <summary>Frontmatter、本文、画像、リンクを反映したHTML文書を組み立てる。</summary>
     public string Build(string inputPath, string markdown, string outputDirectory, string stem,
         ConversionOptions options, TemplateDocument template, AssetWriter assets,
         IReadOnlyDictionary<string, string> htmlTargets)
@@ -59,6 +72,9 @@ public sealed class MarkdownDocumentBuilder
             title = stem;
         var index = template.Index;
         var css = template.Style;
+        if (document.QuerySelector("table.frontmatter") is not null)
+            css = FrontMatterCss + "\n" + css;
+
         var templateAssets = Path.Combine(template.Directory, "assets");
         if (Directory.Exists(templateAssets))
         {
@@ -103,11 +119,25 @@ public sealed class MarkdownDocumentBuilder
         return htmlDocument;
     }
 
+    /// <summary>先頭のFrontmatterを表にし、Markdown本文を安全なHTML文書へ変換する。</summary>
     internal static IHtmlDocument ParseMarkdown(string markdown)
     {
-        markdown = Regex.Replace(markdown, @"(?m)^[ \t]*<!--[ \t]*pagebreak[ \t]*-->[ \t]*\r?$",
-            "\n<div class=\"pagebreak\"></div>\n", RegexOptions.IgnoreCase);
-        var raw = Markdig.Markdown.ToHtml(markdown, Pipeline);
+        var markdownDocument = Markdig.Markdown.Parse(markdown, Pipeline);
+        var frontMatter = markdownDocument.OfType<YamlFrontMatterBlock>().FirstOrDefault();
+        // YAMLの複数行値にある同じ文字列は改ページ指定として扱わない。
+        var withPageBreaks = Regex.Replace(markdown, @"(?m)^[ \t]*<!--[ \t]*pagebreak[ \t]*-->[ \t]*\r?$",
+            match => frontMatter is not null && match.Index <= frontMatter.Span.End
+                ? match.Value : "\n<div class=\"pagebreak\"></div>\n", RegexOptions.IgnoreCase);
+        if (withPageBreaks != markdown)
+        {
+            markdownDocument = Markdig.Markdown.Parse(withPageBreaks, Pipeline);
+            frontMatter = markdownDocument.OfType<YamlFrontMatterBlock>().FirstOrDefault();
+        }
+
+        var raw = Markdig.Markdown.ToHtml(markdownDocument, Pipeline);
+        if (frontMatter is not null)
+            raw = FrontMatterTable.Render(frontMatter.Lines.ToString()) + raw;
+
         var sanitizer = CreateSanitizer();
         var safe = sanitizer.Sanitize(raw);
         var parser = new HtmlParser();
