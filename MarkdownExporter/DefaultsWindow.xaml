@@ -2,13 +2,14 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:loc="clr-namespace:MarkdownExporter.Localization"
+        xmlns:controls="clr-namespace:MarkdownExporter.Controls"
         Title="{loc:Tr DefaultSettings}" Icon="Assets/AppIcon.ico" Width="600" Height="550" MinWidth="560" MinHeight="500"
-        WindowStartupLocation="CenterOwner" Style="{StaticResource UiStyle.Window}" SourceInitialized="Window_SourceInitialized">
+        WindowStartupLocation="CenterOwner" Style="{StaticResource UiStyle.Window}" SourceInitialized="Window_SourceInitialized" Loaded="Window_Loaded">
     <Grid Margin="22">
         <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="12"/><RowDefinition Height="*"/><RowDefinition Height="12"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
         <TextBlock Text="{loc:Tr DefaultSettings}" Style="{StaticResource UiStyle.SectionHeading}" FontSize="20"/>
         <Border Grid.Row="2" Style="{StaticResource UiStyle.Panel}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer x:Name="SettingsScroll" VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="0,0,20,0">
                     <TextBlock Text="{loc:Tr Appearance}" FontWeight="SemiBold" Margin="0,0,0,5"/>
                     <ComboBox x:Name="ThemeCombo" SelectionChanged="ThemeChanged" Margin="0,0,0,16">
@@ -49,6 +50,8 @@
                         <RadioButton x:Name="PortraitRadio" Content="{loc:Tr Portrait}" GroupName="Orientation" Margin="0,0,18,0"/>
                         <RadioButton x:Name="LandscapeRadio" Content="{loc:Tr Landscape}" GroupName="Orientation"/>
                     </StackPanel>
+                    <controls:PdfMarginsControl x:Name="MarginEditor" Margin="0,0,0,13"
+                                                IsEnabled="{Binding IsChecked, ElementName=PdfCheck}" />
                     <TextBlock Text="{loc:Tr FigureDisplay}" FontWeight="SemiBold" Margin="0,0,0,5"/>
                     <CheckBox x:Name="FitCheck" Content="{loc:Tr FitOnePage}" Margin="0,0,0,4"/>
                     <CheckBox x:Name="KeepHeadingCheck" Content="{loc:Tr KeepHeadingWithFigure}" Margin="16,0,0,13"

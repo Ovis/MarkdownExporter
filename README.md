@@ -82,6 +82,7 @@ mdexport.exe --run <入力.md> [別の入力.markdown ...] [オプション]
 | `--format <形式>` | `html`、`pdf`、`both` から選びます。省略時は `both`。`html` と `pdf` はそれぞれ指定した形式のみ出力します。 |
 | `--embed-images` | HTMLのローカル画像をData URIで埋め込みます。省略時はHTMLの素材フォルダーへコピーします。 |
 | `--orientation <向き>` | PDFの用紙方向。`portrait`（A4縦）または `landscape`（A4横）を指定します。省略時は `portrait` です。 |
+| `--margin-top <mm>` / `--margin-bottom <mm>` / `--margin-left <mm>` / `--margin-right <mm>` | PDFの上・下・左・右の余白を個別にmm単位で指定します。各方向の既定値は `15`。0以上の数値を指定できます。 |
 | `--fit-figures-to-page` | PDFの画像・Mermaid図を印刷領域に収まるよう縮小します。省略時は適用しません。 |
 | `--keep-heading-with-figure` | 図の直前にある見出し1つを同じPDFページに配置します。`--fit-figures-to-page` と併用します。省略時は適用しません。 |
 | `--follow-markdown-links` | ローカルのMarkdownリンクを再帰的にたどり、リンク先も変換します。省略時は指定ファイルのみ変換します。 |
@@ -95,6 +96,7 @@ PowerShellで配布フォルダーから実行する例:
 .\mdexport.exe --run .\report.md
 .\mdexport.exe --run .\chapter1.md ".\draft chapter.md" --format html -o "C:\Output Files" --template custom
 .\mdexport.exe --run .\report.md --format pdf --orientation landscape --fit-figures-to-page
+.\mdexport.exe --run .\report.md --format pdf --margin-top 10 --margin-bottom 20 --margin-left 15 --margin-right 15
 .\mdexport.exe --run .\legacy.md --encoding shift-jis --embed-images --overwrite
 .\mdexport.exe --run .\index.md --format both --follow-markdown-links --output .\out
 .\mdexport.exe --help

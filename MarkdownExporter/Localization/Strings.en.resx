@@ -30,6 +30,14 @@
   <data name="HtmlImages" xml:space="preserve"><value>HTML images</value></data>
   <data name="EmbedInHtml" xml:space="preserve"><value>Embed in HTML</value></data>
   <data name="PdfOrientation" xml:space="preserve"><value>PDF orientation</value></data>
+  <data name="PdfMargins" xml:space="preserve"><value>PDF margins (mm)</value></data>
+  <data name="PdfMarginTop" xml:space="preserve"><value>Top</value></data>
+  <data name="PdfMarginBottom" xml:space="preserve"><value>Bottom</value></data>
+  <data name="PdfMarginLeft" xml:space="preserve"><value>Left</value></data>
+  <data name="PdfMarginRight" xml:space="preserve"><value>Right</value></data>
+  <data name="PdfMarginsSummary" xml:space="preserve"><value>Top {0} · bottom {1} · left {2} · right {3} mm</value></data>
+  <data name="InvalidPdfMargins" xml:space="preserve"><value>Enter non-negative numbers for the PDF margins.</value></data>
+  <data name="PdfMarginsTooLarge" xml:space="preserve"><value>The PDF margins are too large. Each pair must leave space on the A4 page.</value></data>
   <data name="Portrait" xml:space="preserve"><value>Portrait</value></data>
   <data name="Landscape" xml:space="preserve"><value>Landscape</value></data>
   <data name="FigureDisplay" xml:space="preserve"><value>Figures</value></data>
@@ -80,6 +88,7 @@
   <data name="CliMissingValue" xml:space="preserve"><value>Missing value for {0}.</value></data>
   <data name="CliInvalidFormat" xml:space="preserve"><value>--format must be html, pdf, or both.</value></data>
   <data name="CliInvalidOrientation" xml:space="preserve"><value>--orientation must be portrait or landscape.</value></data>
+  <data name="CliInvalidMargin" xml:space="preserve"><value>{0} must be a non-negative number in millimeters.</value></data>
   <data name="CliInvalidEncoding" xml:space="preserve"><value>--encoding must be auto, utf-8, shift-jis, or euc-jp.</value></data>
   <data name="CliUnknownOption" xml:space="preserve"><value>Unknown option: {0}</value></data>
   <data name="CliRequiresFile" xml:space="preserve"><value>Specify a Markdown file with --run.</value></data>
@@ -89,6 +98,10 @@
   <data name="CliFormatDesc" xml:space="preserve"><value>Output format (default: both)</value></data>
   <data name="CliEmbedDesc" xml:space="preserve"><value>Embed images in HTML</value></data>
   <data name="CliOrientationDesc" xml:space="preserve"><value>PDF orientation</value></data>
+  <data name="CliMarginTopDesc" xml:space="preserve"><value>PDF top margin in mm (default: 15)</value></data>
+  <data name="CliMarginBottomDesc" xml:space="preserve"><value>PDF bottom margin in mm (default: 15)</value></data>
+  <data name="CliMarginLeftDesc" xml:space="preserve"><value>PDF left margin in mm (default: 15)</value></data>
+  <data name="CliMarginRightDesc" xml:space="preserve"><value>PDF right margin in mm (default: 15)</value></data>
   <data name="CliFitDesc" xml:space="preserve"><value>Scale PDF figures to fit a page</value></data>
   <data name="CliKeepHeadingDesc" xml:space="preserve"><value>Keep the preceding heading with its PDF figure (requires --fit-figures-to-page)</value></data>
   <data name="CliKeepHeadingRequiresFit" xml:space="preserve"><value>--keep-heading-with-figure requires --fit-figures-to-page.</value></data>

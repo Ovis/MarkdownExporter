@@ -124,6 +124,65 @@
         <Setter Property="Width" Value="30" />
         <Setter Property="Padding" Value="0" />
     </Style>
+    <Style x:Key="UiStyle.MarginToggle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="{DynamicResource UiBrush.Control}" />
+        <Setter Property="Foreground" Value="{DynamicResource UiBrush.Text}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="Chrome" Background="{TemplateBinding Background}" Padding="10,8"
+                            CornerRadius="{StaticResource UiRadius.Control}">
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <ContentPresenter VerticalAlignment="Center" />
+                            <Path x:Name="Chevron" Grid.Column="1" Data="M 1 3 L 5 7 L 9 3"
+                                  Stroke="{DynamicResource UiBrush.TextMuted}" StrokeThickness="1.5"
+                                  VerticalAlignment="Center" Margin="8,0,0,0" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Chevron" Property="Data" Value="M 1 7 L 5 3 L 9 7" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource UiBrush.ControlHover}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource UiBrush.DisabledText}" />
+                            <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource UiBrush.DisabledBackground}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="UiStyle.MarginExpander" TargetType="{x:Type Expander}">
+        <Setter Property="Foreground" Value="{DynamicResource UiBrush.Text}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Border Background="{DynamicResource UiBrush.Control}" BorderBrush="{DynamicResource UiBrush.BorderStrong}"
+                            BorderThickness="1" CornerRadius="{StaticResource UiRadius.Control}">
+                        <StackPanel>
+                            <ToggleButton Content="{TemplateBinding Header}" Style="{StaticResource UiStyle.MarginToggle}"
+                                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+                            <ContentPresenter x:Name="ExpandSite" ContentSource="Content" Visibility="Collapsed" Margin="10,4,10,10" />
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Setter TargetName="ExpandSite" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource UiBrush.DisabledText}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
     <Style x:Key="UiStyle.ActionMenu" TargetType="{x:Type ContextMenu}">
         <Setter Property="Background" Value="{DynamicResource UiBrush.Control}" />
         <Setter Property="BorderBrush" Value="{DynamicResource UiBrush.BorderStrong}" />

@@ -89,12 +89,11 @@ public sealed class WebViewRenderer : IDisposable
 
         if (pdfPath is not null)
         {
-            var landscape = options.Orientation == PageOrientation.Landscape;
-            var pageCss = landscape ? "@page{size:A4 landscape;margin:15mm}" : "@page{size:A4 portrait;margin:15mm}";
+            var layout = PdfPageLayout.Create(options.Margins, options.Orientation);
             if (options.FitFiguresToPage)
             {
-                var maxWidth = landscape ? "267mm" : "180mm";
-                var maxHeight = landscape ? "150mm" : "267mm";
+                var maxWidth = PdfPageLayout.Mm(layout.FigureMaxWidthMm);
+                var maxHeight = PdfPageLayout.Mm(layout.FigureMaxHeightMm);
                 // Inline important rules keep a template's width/height when they fit, but
                 // prevent its stronger selectors or minimum sizes from defeating the page limit.
                 await browser.CoreWebView2.ExecuteScriptAsync($$"""
@@ -150,12 +149,15 @@ public sealed class WebViewRenderer : IDisposable
                         })();
                         """);
             }
-            await browser.CoreWebView2.ExecuteScriptAsync($"document.head.appendChild(Object.assign(document.createElement('style'), {{textContent: {JsonSerializer.Serialize(pageCss)}}}));");
+            await browser.CoreWebView2.ExecuteScriptAsync($"document.head.appendChild(Object.assign(document.createElement('style'), {{textContent: {JsonSerializer.Serialize(layout.PageCss)}}}));");
             var settings = browser.CoreWebView2.Environment.CreatePrintSettings();
-            settings.Orientation = landscape ? CoreWebView2PrintOrientation.Landscape : CoreWebView2PrintOrientation.Portrait;
-            settings.PageWidth = 8.2677;
-            settings.PageHeight = 11.6929;
-            settings.MarginTop = settings.MarginBottom = settings.MarginLeft = settings.MarginRight = .5906;
+            settings.Orientation = layout.Landscape ? CoreWebView2PrintOrientation.Landscape : CoreWebView2PrintOrientation.Portrait;
+            settings.PageWidth = PdfPageLayout.Inches(210m);
+            settings.PageHeight = PdfPageLayout.Inches(297m);
+            settings.MarginTop = PdfPageLayout.Inches(layout.Margins.Top);
+            settings.MarginBottom = PdfPageLayout.Inches(layout.Margins.Bottom);
+            settings.MarginLeft = PdfPageLayout.Inches(layout.Margins.Left);
+            settings.MarginRight = PdfPageLayout.Inches(layout.Margins.Right);
             settings.ShouldPrintBackgrounds = true;
             settings.ShouldPrintHeaderAndFooter = false;
             if (!await browser.CoreWebView2.PrintToPdfAsync(pdfPath, settings))

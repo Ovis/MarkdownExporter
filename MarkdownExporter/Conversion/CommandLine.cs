@@ -1,3 +1,4 @@
+using System.Globalization;
 using MarkdownExporter.Localization;
 
 namespace MarkdownExporter.Conversion;
@@ -22,6 +23,14 @@ public static class CommandLineParser
                 if (++i >= args.Length)
                     throw new ArgumentException(LanguageManager.Format("CliMissingValue", arg));
                 return args[i];
+            }
+            decimal MarginValue()
+            {
+                var value = Value();
+                if (!decimal.TryParse(value, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint,
+                        CultureInfo.InvariantCulture, out var millimeters) || millimeters < 0)
+                    throw new ArgumentException(LanguageManager.Format("CliInvalidMargin", arg));
+                return millimeters;
             }
             switch (arg)
             {
@@ -71,6 +80,18 @@ public static class CommandLineParser
                         _ => throw new ArgumentException(LanguageManager.Text("CliInvalidOrientation"))
                     };
                     break;
+                case "--margin-top":
+                    options.Margins = options.Margins with { Top = MarginValue() };
+                    break;
+                case "--margin-bottom":
+                    options.Margins = options.Margins with { Bottom = MarginValue() };
+                    break;
+                case "--margin-left":
+                    options.Margins = options.Margins with { Left = MarginValue() };
+                    break;
+                case "--margin-right":
+                    options.Margins = options.Margins with { Right = MarginValue() };
+                    break;
                 case "--encoding":
                     options.Encoding = Value().ToLowerInvariant() switch
                     {
@@ -92,6 +113,8 @@ public static class CommandLineParser
             throw new ArgumentException(LanguageManager.Text("CliRequiresFile"));
         if (run && options.KeepHeadingWithFigure && !options.FitFiguresToPage && !help)
             throw new ArgumentException(LanguageManager.Text("CliKeepHeadingRequiresFit"));
+        if (run && !help)
+            _ = PdfPageLayout.Create(options.Margins, options.Orientation);
         if (!run && args.Any(x => x.StartsWith('-')) && !help)
             throw new ArgumentException(LanguageManager.Text("CliRequiresRun"));
         if (!run)
@@ -106,6 +129,10 @@ public static class CommandLineParser
           --format html|pdf|both        {LanguageManager.Text("CliFormatDesc")}
           --embed-images               {LanguageManager.Text("CliEmbedDesc")}
           --orientation portrait|landscape  {LanguageManager.Text("CliOrientationDesc")}
+          --margin-top <mm>            {LanguageManager.Text("CliMarginTopDesc")}
+          --margin-bottom <mm>         {LanguageManager.Text("CliMarginBottomDesc")}
+          --margin-left <mm>           {LanguageManager.Text("CliMarginLeftDesc")}
+          --margin-right <mm>          {LanguageManager.Text("CliMarginRightDesc")}
           --fit-figures-to-page        {LanguageManager.Text("CliFitDesc")}
           --keep-heading-with-figure  {LanguageManager.Text("CliKeepHeadingDesc")}
           --follow-markdown-links      {LanguageManager.Text("CliFollowMarkdownDesc")}
