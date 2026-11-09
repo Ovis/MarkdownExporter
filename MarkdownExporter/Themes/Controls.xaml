@@ -355,18 +355,18 @@
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="TextAlignment" Value="Center" />
     </Style>
-    <Style x:Key="UiStyle.TableWarningButton" TargetType="{x:Type Button}">
+    <Style x:Key="UiStyle.TableResultButton" TargetType="{x:Type Button}">
         <Setter Property="MinHeight" Value="0" />
         <Setter Property="Padding" Value="4,2" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Foreground" Value="{DynamicResource UiBrush.Warning}" />
+        <Setter Property="Foreground" Value="{DynamicResource UiBrush.Accent}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Chrome" Background="Transparent" BorderBrush="Transparent"
-                            BorderThickness="1" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                    <Border x:Name="Chrome" Background="Transparent" BorderBrush="{TemplateBinding Foreground}"
+                            BorderThickness="0" CornerRadius="3" Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -374,12 +374,16 @@
                             <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource UiBrush.ControlHover}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource UiBrush.Warning}" />
+                            <Setter TargetName="Chrome" Property="BorderThickness" Value="1" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style x:Key="UiStyle.TableWarningButton" TargetType="{x:Type Button}"
+           BasedOn="{StaticResource UiStyle.TableResultButton}">
+        <Setter Property="Foreground" Value="{DynamicResource UiBrush.Warning}" />
     </Style>
     <Style x:Key="UiStyle.TableFileName" TargetType="{x:Type TextBlock}">
         <Setter Property="FontSize" Value="14" />

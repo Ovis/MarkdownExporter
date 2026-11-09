@@ -70,8 +70,48 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="HTML" Binding="{Binding HtmlStatus}" IsReadOnly="True" Width="60" ElementStyle="{StaticResource UiStyle.TableStatusText}"/>
-                            <DataGridTextColumn Header="PDF" Binding="{Binding PdfStatus}" IsReadOnly="True" Width="60" ElementStyle="{StaticResource UiStyle.TableStatusText}"/>
+                            <DataGridTemplateColumn Header="HTML" IsReadOnly="True" Width="60">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock x:Name="HtmlStatusText" Text="{Binding HtmlStatus}"
+                                                       Style="{StaticResource UiStyle.TableStatusText}" />
+                                            <Button x:Name="OpenHtmlButton" Visibility="Collapsed" Click="OpenHtml_Click"
+                                                    ToolTip="{Binding HtmlOutputPath}"
+                                                    Style="{StaticResource UiStyle.TableResultButton}">
+                                                <TextBlock Text="{Binding HtmlStatus}" TextDecorations="Underline" />
+                                            </Button>
+                                        </Grid>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsHtmlOpenable}" Value="True">
+                                                <Setter TargetName="HtmlStatusText" Property="Visibility" Value="Collapsed" />
+                                                <Setter TargetName="OpenHtmlButton" Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="PDF" IsReadOnly="True" Width="60">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock x:Name="PdfStatusText" Text="{Binding PdfStatus}"
+                                                       Style="{StaticResource UiStyle.TableStatusText}" />
+                                            <Button x:Name="OpenPdfButton" Visibility="Collapsed" Click="OpenPdf_Click"
+                                                    ToolTip="{Binding PdfOutputPath}"
+                                                    Style="{StaticResource UiStyle.TableResultButton}">
+                                                <TextBlock Text="{Binding PdfStatus}" TextDecorations="Underline" />
+                                            </Button>
+                                        </Grid>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsPdfOpenable}" Value="True">
+                                                <Setter TargetName="PdfStatusText" Property="Visibility" Value="Collapsed" />
+                                                <Setter TargetName="OpenPdfButton" Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTemplateColumn Header="{loc:Tr State}" IsReadOnly="True" Width="80">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
