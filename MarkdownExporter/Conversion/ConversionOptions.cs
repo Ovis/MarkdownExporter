@@ -54,7 +54,9 @@ public sealed class ConversionOptions
 }
 
 public sealed record InputFile(string Path, InputEncoding Encoding);
-public sealed record ConversionResult(string Path, bool HtmlSuccess, bool PdfSuccess, string? Error, IReadOnlyList<string> Warnings)
+/// <summary>文書ごとの変換結果と、成功した出力ファイルのパスを保持する。</summary>
+public sealed record ConversionResult(string Path, bool HtmlSuccess, bool PdfSuccess, string? Error,
+    IReadOnlyList<string> Warnings, string? HtmlPath, string? PdfPath)
 {
     public bool Success => Error is null;
 }

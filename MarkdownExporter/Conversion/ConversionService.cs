@@ -156,7 +156,8 @@ public sealed class ConversionService
             entry.Warnings.Add(LanguageManager.Format("RelativeLinksWarning", entry.RelativeLinkCount));
 
         var results = pending.Select(x => new ConversionResult(x.Path, x.HtmlSuccess, x.PdfSuccess, x.Error,
-            x.Warnings.Distinct().ToArray())).ToArray();
+            x.Warnings.Distinct().ToArray(), x.HtmlSuccess ? x.HtmlPath : null,
+            x.PdfSuccess ? x.PdfPath : null)).ToArray();
         foreach (var result in results)
             onResult?.Invoke(result);
         return results;

@@ -62,6 +62,9 @@
   <data name="Save" xml:space="preserve"><value>保存</value></data>
   <data name="DialogSettingsError" xml:space="preserve"><value>設定エラー</value></data>
   <data name="DialogConversionError" xml:space="preserve"><value>変換エラー</value></data>
+  <data name="DialogOpenOutputError" xml:space="preserve"><value>出力ファイルを開けません</value></data>
+  <data name="OutputFileMissing" xml:space="preserve"><value>出力ファイルが見つかりません: {0}</value></data>
+  <data name="OutputFileOpenFailed" xml:space="preserve"><value>出力ファイルを開けませんでした: {0}&#10;{1}</value></data>
   <data name="DialogConfirmation" xml:space="preserve"><value>確認</value></data>
   <data name="DialogYes" xml:space="preserve"><value>はい</value></data>
   <data name="DialogNo" xml:space="preserve"><value>いいえ</value></data>

@@ -338,6 +338,8 @@ public partial class MainWindow : Window
             Status.Text = LanguageManager.Text("Converting");
             foreach (var row in Files)
             {
+                row.HtmlOutputPath = null;
+                row.PdfOutputPath = null;
                 row.HtmlStatus = options.Format == ExportFormat.Pdf ? "NotApplicable" : "Waiting";
                 row.PdfStatus = options.Format == ExportFormat.Html ? "NotApplicable" : "Waiting";
                 row.State = "Processing";
@@ -347,6 +349,8 @@ public partial class MainWindow : Window
                 result =>
                 {
                     var row = FindOrAddRow(result.Path);
+                    row.HtmlOutputPath = result.HtmlPath;
+                    row.PdfOutputPath = result.PdfPath;
                     row.HtmlStatus = options.Format == ExportFormat.Pdf ? "NotApplicable" : result.HtmlSuccess ? "Success" : "Failure";
                     row.PdfStatus = options.Format == ExportFormat.Html ? "NotApplicable" : result.PdfSuccess ? "Success" : "Failure";
                     row.State = result.Error is not null ? "Failure" : result.Warnings.Count > 0 ? "Warning" : "Success";
@@ -391,6 +395,44 @@ public partial class MainWindow : Window
         AppDialog.ShowMessage(this, $"{row.Name}{Environment.NewLine}{Environment.NewLine}{row.Detail}",
             LanguageManager.Text("WarningDetailsTitle"), AppDialogKind.Warning);
     }
+
+    /// <summary>成功したHTMLを関連付け済みのアプリで開く。</summary>
+    private void OpenHtml_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { DataContext: FileRow row })
+            OpenOutput(row.HtmlOutputPath);
+    }
+
+    /// <summary>成功したPDFを関連付け済みのアプリで開く。</summary>
+    private void OpenPdf_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { DataContext: FileRow row })
+            OpenOutput(row.PdfOutputPath);
+    }
+
+    /// <summary>出力ファイルの存在を確認し、Windowsの関連付けで起動する。</summary>
+    private void OpenOutput(string? path)
+    {
+        if (path is null)
+            return;
+
+        if (!File.Exists(path))
+        {
+            AppDialog.ShowMessage(this, LanguageManager.Format("OutputFileMissing", path),
+                LanguageManager.Text("DialogOpenOutputError"));
+            return;
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            AppDialog.ShowMessage(this, LanguageManager.Format("OutputFileOpenFailed", path, ex.Message),
+                LanguageManager.Text("DialogOpenOutputError"));
+        }
+    }
 }
 
 public sealed class FileRow : INotifyPropertyChanged
@@ -399,6 +441,8 @@ public sealed class FileRow : INotifyPropertyChanged
     private string pdfStatusKey = "Waiting";
     private string stateKey = "Waiting";
     private string detail = "";
+    private string? htmlOutputPath;
+    private string? pdfOutputPath;
     private bool isLinked;
     private EncodingOption selectedEncodingOption;
 
@@ -451,11 +495,27 @@ public sealed class FileRow : INotifyPropertyChanged
         get => LanguageManager.Text(htmlStatusKey);
         set { htmlStatusKey = value; Notify(); }
     }
+    /// <summary>成功したHTMLの実際の出力先。未出力時はnull。</summary>
+    public string? HtmlOutputPath
+    {
+        get => htmlOutputPath;
+        set { htmlOutputPath = value; Notify(); Notify(nameof(IsHtmlOpenable)); }
+    }
+    /// <summary>HTML出力を一覧から開けるかどうか。</summary>
+    public bool IsHtmlOpenable => HtmlOutputPath is not null;
     public string PdfStatus
     {
         get => LanguageManager.Text(pdfStatusKey);
         set { pdfStatusKey = value; Notify(); }
     }
+    /// <summary>成功したPDFの実際の出力先。未出力時はnull。</summary>
+    public string? PdfOutputPath
+    {
+        get => pdfOutputPath;
+        set { pdfOutputPath = value; Notify(); Notify(nameof(IsPdfOpenable)); }
+    }
+    /// <summary>PDF出力を一覧から開けるかどうか。</summary>
+    public bool IsPdfOpenable => PdfOutputPath is not null;
     public string State
     {
         get => LanguageManager.Text(stateKey);

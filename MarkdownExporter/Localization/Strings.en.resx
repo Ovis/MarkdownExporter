@@ -62,6 +62,9 @@
   <data name="Save" xml:space="preserve"><value>Save</value></data>
   <data name="DialogSettingsError" xml:space="preserve"><value>Settings error</value></data>
   <data name="DialogConversionError" xml:space="preserve"><value>Conversion error</value></data>
+  <data name="DialogOpenOutputError" xml:space="preserve"><value>Cannot open output file</value></data>
+  <data name="OutputFileMissing" xml:space="preserve"><value>Output file not found: {0}</value></data>
+  <data name="OutputFileOpenFailed" xml:space="preserve"><value>Could not open the output file: {0}&#10;{1}</value></data>
   <data name="DialogConfirmation" xml:space="preserve"><value>Confirm</value></data>
   <data name="DialogYes" xml:space="preserve"><value>Yes</value></data>
   <data name="DialogNo" xml:space="preserve"><value>No</value></data>
